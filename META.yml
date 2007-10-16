@@ -1,0 +1,20 @@
+---
+name: Win32API-File-Time
+version: 0.006
+author:
+  - Tom Wyant (wyant at cpan dot org)
+abstract: 'Get and set file times in Windows - including open files'
+license: perl
+resources:
+  license: http://dev.perl.org/licenses/
+requires:
+  Win32::API: 0.01
+  Win32API::File: 0.08
+provides:
+  Win32API::File::Time:
+    file: lib/Win32API/File/Time.pm
+    version: 0.006
+generated_by: Module::Build version 0.2808
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.2.html
+  version: 1.2

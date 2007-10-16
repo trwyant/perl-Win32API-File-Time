@@ -1,0 +1,71 @@
+Win32API::File::Time
+
+This package exposes the Windows file creation time for access and
+modification. It also allows the access, update, and creation times
+to be modified even if the file is open, or read-only. In fact, the
+porting of functionality from a system where the Perl utime build-in
+would change the date of an open file (VMS) to one where it wouldn't
+(MSWin32) was the motivation for the module.
+
+This module exports nothing by default, but is capable of exporting
+the following subroutines:
+    GetFileTime and SetFileTime (to get and set all file times)
+    utime (to override the built-in).
+Unlike the Microsoft Kernel32 subroutines of the same name, these take
+a file name (not a handle), and work in terms of Perl times, not
+Microsoft file times. Specifically:
+
+  ($atime, $mtime, $ctime) = GetFileTime ($filename);
+  SetFileTime ($filename, $atime, $mtime, $ctime) or die $^E;
+
+This module has the following prerequisites:
+  Time::Local
+  Win32::API
+  Win32API::File
+
+
+
+INSTALLATION INSTRUCTIONS
+------------ ------------
+
+CPAN kit:
+
+expand the kit using GZip and TAR (or equivalent). Then issue the
+standard commands:
+
+ perl Makefile.PL
+ nmake
+ nmake test
+ nmake install
+
+Note that the "test" step is optional, but recommended.
+
+See ftp://ftp.microsoft.com/Softlib/MSLFILES/nmake15.exe for a copy of
+nmake if you need it.
+
+
+PPM kit:
+
+Expand the kit using unzip (or equivalent). Then
+
+ ppm install Win32API-File-Time.ppd
+
+
+If all else fails:
+
+Get the .pm files from your kit by whatever means you can, and drop
+them in /site/lib/Win32/Process (or wherever ...).
+
+
+COPYRIGHT NOTICE
+--------- ------
+
+Copyright 2004, 2005 by E. I. DuPont de Nemours and Company, Inc.
+All rights reserved.
+
+Modifications since version 0.005 copyright 2007 Thomas R. Wyant, III.
+All rights reserved.
+
+This module is free software; you can use it, redistribute it
+and/or modify it under the same terms as Perl itself.
+

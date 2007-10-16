@@ -1,0 +1,17 @@
+^blib/
+^Build$
+CVS/
+^foo
+^Makefile$
+^MANIFEST\.
+^pm_to_blib$
+^t/manifest.t$
+\.old$
+\.swp$
+^t/executable.t$
+^t/pod_spelling.t$
+^_build/
+\.tar\.gz$
+^TODO$
+^Win32API-File-Time-
+\.tmp\.bat$
