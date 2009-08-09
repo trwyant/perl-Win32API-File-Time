@@ -12,6 +12,7 @@ CVS/
 ^t/pod_spelling.t$
 ^_build/
 \.tar\.gz$
+^test_environment$
 ^TODO$
 ^Win32API-File-Time-
 \.tmp\.bat$
