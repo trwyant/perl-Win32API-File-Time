@@ -29,6 +29,9 @@ $mbv >= 0.28 and $args{meta_merge} = {
     },
 };
 
+$mbv >= 0.34
+    and $args{auto_configure_requires} = 0;	# Don't require Module::Build
+
 my $bldr = Module::Build->new(%args);
 
 $bldr->create_build_script ();
