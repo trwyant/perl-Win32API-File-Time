@@ -4,9 +4,11 @@ CVS/
 ^foo
 ^Makefile$
 ^MANIFEST\.
+^meta/
 ^pm_to_blib$
 ^t/manifest.t$
 \.old$
+\.svn/
 \.swp$
 ^t/executable.t$
 ^t/pod_spelling.t$
