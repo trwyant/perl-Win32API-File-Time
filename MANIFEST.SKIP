@@ -7,6 +7,8 @@ CVS/
 ^meta/
 ^pm_to_blib$
 ^t/manifest.t$
+^\meta/
+^MYMETA\.yml$
 \.old$
 \.svn/
 \.swp$
