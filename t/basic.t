@@ -6,8 +6,9 @@ use warnings;
 use File::Basename;
 use File::Spec;
 use FileHandle;
-use POSIX qw{strftime};
 use Test;
+
+my $reactos = 'MSWin32' eq $^O && 'reactos' eq lc $ENV{OS};
 
 my $test_num = 1;
 my $loaded;
@@ -28,7 +29,6 @@ $loaded = 1;
 ok ($loaded);
 
 my $me = File::Spec->rel2abs ($0);
-my $df = '%d-%b-%Y %H:%M:%S';
 
 print "# This file is $me\n";
 my ($patim, $pmtim, $pctim);
@@ -47,17 +47,20 @@ print "# Test $test_num - Get file times.\n";
 my ($atime, $mtime, $ctime) = GetFileTime ($me);
 print <<eod;
 #           Win32API::File::Time  stat
-# Accessed: @{[strftime $df, localtime $atime]}  @{[
-	strftime $df, localtime $patim]}
-#  Created: @{[strftime $df, localtime $ctime]}  @{[
-	strftime $df, localtime $pctim]}
+# Accessed: @{[ scalar localtime $atime ]}  @{[
+	scalar localtime $patim]}
+# Modified: @{[ scalar localtime $mtime ]}  @{[
+	scalar localtime $pmtim]}
+#  Created: @{[scalar localtime $ctime]}  @{[
+	scalar localtime $pctim]}
 eod
 $pctim or print <<eod;
 # stat() returned 0 for creation time. Creation time will not be
 # included in the test.
 eod
 # stat() returns 0 under wine, at least in ActivePerl.
-$rslt = $mtime == $pmtim && (!$pctim || $ctime == $pctim);
+# Under ReactOS 0.3.11, creation times come out screwy.
+$rslt = $mtime == $pmtim && ($reactos || !$pctim || $ctime == $pctim);
 ok ($rslt);
 $rslt ? pftime ($atime, $mtime, $ctime) : print <<eod;
 # GetFileTime failed.
@@ -81,8 +84,8 @@ $skip or $rslt = SetFileTime ($testfile, $now, $now) and do {
     $rslt = $pmtim == $now;	# Don't test atime, because of resolution.
     };
 $skip or print <<eod;
-# desired mod time: $now = @{[strftime $df, localtime $now]}.
-#  actual mod time: @{[defined $pmtim ? "$pmtim = @{[strftime $df, localtime $pmtim]}" : 'undef']}
+# desired mod time: $now = @{[scalar localtime $now]}.
+#  actual mod time: @{[defined $pmtim ? "$pmtim = @{[scalar localtime $pmtim]}" : 'undef']}
 eod
 skip ($skip, $rslt);
 $skip or $rslt or print <<eod;
@@ -100,8 +103,8 @@ $skip or $rslt = utime $now, $now, $testfile and do {
     $rslt = $pmtim == $now;	# Don't test atime, because of resolution.
     };
 $skip or print <<eod;
-# desired mod time: $now = @{[strftime $df, localtime $now]}.
-#  actual mod time: @{[defined $pmtim ? "$pmtim = @{[strftime $df, localtime $pmtim]}" : 'undef']}
+# desired mod time: $now = @{[scalar localtime $now]}.
+#  actual mod time: @{[defined $pmtim ? "$pmtim = @{[scalar localtime $pmtim]}" : 'undef']}
 eod
 skip ($skip, $rslt);
 $skip or $rslt or print <<eod;
@@ -112,7 +115,7 @@ eod
 $skip or unlink $testfile;
 
 sub pftime {
-my ($sat, $smt, $sct) = map {strftime $df, localtime $_} @_;
+my ($sat, $smt, $sct) = map {scalar localtime $_} @_;
 print <<eod;
 # Accessed: $sat
 # Modified: $smt
@@ -120,6 +123,6 @@ print <<eod;
 eod
 }
 sub sftime {
-map {strftime $df, localtime $_} @_
+map {scalar localtime $_} @_
 }
 
