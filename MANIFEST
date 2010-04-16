@@ -2,6 +2,7 @@ Build.PL
 Changes
 eg/README
 eg/touch.pl
+inc/My/Module/Build.pm
 lib/Win32API/File/Time.pm
 Makefile.PL
 LICENSES/Artistic
@@ -10,5 +11,8 @@ MANIFEST
 META.yml
 README
 t/basic.t
-t/pod.t
-t/pod_coverage.t
+xt/executable.t
+xt/manifest.t
+xt/pod.t
+xt/pod_coverage.t
+xt/pod_spelling.t

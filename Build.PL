@@ -1,11 +1,12 @@
 use strict;
 use warnings;
 
+use lib qw{ inc };
+
+use My::Module::Build;
 use Module::Build;
 use Config;
 use FileHandle;
-
-our $VERSION = '0.001_01';
 
 (my $mbv = Module::Build->VERSION) =~ s/_//g;
 
@@ -32,6 +33,6 @@ $mbv >= 0.28 and $args{meta_merge} = {
 $mbv >= 0.34
     and $args{auto_configure_requires} = 0;	# Don't require Module::Build
 
-my $bldr = Module::Build->new(%args);
+my $bldr = My::Module::Build->new(%args);
 
 $bldr->create_build_script ();

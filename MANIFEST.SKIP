@@ -12,8 +12,6 @@ CVS/
 \.old$
 \.svn/
 \.swp$
-^t/executable.t$
-^t/pod_spelling.t$
 ^_build/
 \.tar\.gz$
 ^test_environment$
