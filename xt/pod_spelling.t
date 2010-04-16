@@ -1,20 +1,24 @@
+package main;
+
 use strict;
 use warnings;
 
-my $skip;
 BEGIN {
-    eval "use Test::Spelling";
-    $@ and do {
+    eval {
+	require Test::Spelling;
+	Test::Spelling->import();
+	1;
+    } or do {
 	print "1..0 # skip Test::Spelling not available.\n";
 	exit;
     };
 }
 
-our $VERSION = '0.000_01';
-
 add_stopwords (<DATA>);
 
 all_pod_files_spelling_ok ();
+
+1;
 __DATA__
 Aldo
 Calpini

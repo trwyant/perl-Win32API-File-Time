@@ -82,10 +82,10 @@ supply of tuits.
 # 0.005 04-May-2005	T. R. Wyant
 #		Release to CPAN.
 
+package Win32API::File::Time;
+
 use strict;
 use warnings;
-
-package Win32API::File::Time;
 
 use base qw{Exporter};
 use vars qw{@EXPORT_OK %EXPORT_TAGS $VERSION};
@@ -180,11 +180,10 @@ error encountered.
 
 =cut
 
-sub utime {
-my $atime = shift;
-my $mtime = shift;
+sub utime {	## no critic (ProhibitBuiltinHomonyms)
+my ( $atime, $mtime, @args ) = @_;
 my $num = 0;
-foreach my $fn (@_) {
+foreach my $fn (@args) {
     SetFileTime ($fn, $atime, $mtime) and $num++;
     }
 return $num;
@@ -204,7 +203,7 @@ sub _close_handle {
 my $fh = shift;
 my $err = Win32::GetLastError ();
 CloseHandle ($fh);
-$^E = $err;
+$^E = $err;	## no critic (RequireLocalizedPunctuationVars)
 return;
 }
 
@@ -223,20 +222,21 @@ return;
 #	results of the stat () function.
 
 sub _filetime_to_perltime {
+my @args = @_;
 my @result;
 $FileTimeToSystemTime ||= _map (
 	'KERNEL32', 'FileTimeToSystemTime', [qw{P P}], 'I');
 $FileTimeToLocalFileTime ||= _map (
 	'KERNEL32', 'FileTimeToLocalFileTime', [qw{P P}], 'I');
 my $st = pack 'ssssssss', 0, 0, 0, 0, 0, 0, 0, 0;
-foreach my $ft (@_) {
+foreach my $ft (@args) {
     my ($low, $high) = unpack 'LL', $ft;
     $high or do {
 	push @result, undef;
 	next;
 	};
     my $lf = $ft;	# Just to get the space allocated.
-    $FileTimeToLocalFileTime->Call ($ft, $lf) &&
+    $FileTimeToLocalFileTime->Call ($ft, $lf) and
 	$FileTimeToSystemTime->Call ($lf, $st) or do {
 	push @result, undef;
 	next;
@@ -261,7 +261,7 @@ sub _get_handle {
 my $fn = shift;
 my $write = shift;
 
-${^WIDE_SYSTEM_CALLS} ?
+my $handle = ${^WIDE_SYSTEM_CALLS} ?
     CreateFileW ($fn,
 	($write ? FILE_WRITE_ATTRIBUTES : FILE_READ_ATTRIBUTES),
 	($write ? FILE_SHARE_WRITE | FILE_SHARE_READ : FILE_SHARE_READ),
@@ -279,9 +279,10 @@ ${^WIDE_SYSTEM_CALLS} ?
 	0,
 	)
   or do {
-    $^E = Win32::GetLastError ();
+    $^E = Win32::GetLastError ();	## no critic (RequireLocalizedPunctuationVars)
     return;
     };
+return $handle;
 }
 
 
@@ -303,6 +304,7 @@ return Win32::API->new (@_) ||
 #	the one used in _filetime_to_perltime.
 
 sub _perltime_to_filetime {
+    my @args = @_;
 my @result;
 $SystemTimeToFileTime ||= _map (
 	'KERNEL32', 'SystemTimeToFileTime', [qw{P P}], 'I');
@@ -310,7 +312,7 @@ $LocalFileTimeToFileTime ||= _map (
 	'KERNEL32', 'LocalFileTimeToFileTime', [qw{P P}], 'I');
 my $zero = pack 'LL', 0, 0;	# To get a quadword zero.
 my ($ft, $lf) = ($zero, $zero);	# To get the space allocated.
-foreach my $pt (@_) {
+foreach my $pt (@args) {
     if (defined $pt) {
 	my @tm = localtime ($pt);
 	my $st = pack 'ssssssss', $tm[5] + 1900, $tm[4] + 1, 0,
@@ -324,6 +326,10 @@ foreach my $pt (@_) {
     }
 return wantarray ? @result : $result[0];
 }
+
+1;
+
+__END__
 
 =back
 

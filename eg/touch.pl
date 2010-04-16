@@ -118,7 +118,7 @@ $opt{date} and do {
     require Date::Manip;
     $atime = $mtime = $ctime = Date::Manip::UnixDate ($opt{date}, '%s');
     };
-!$atime && $opt{t} and do {
+not $atime and $opt{t} and do {
     $opt{t} =~ m/^(\d{8,12})(\.(\d{2}))?$/ or die <<eod;
 touch: invalid date format '$opt{t}'.
 eod
@@ -129,10 +129,10 @@ eod
     push @time, $4, $3, $2, $1 - 1, $mins || (localtime)[5];
     $atime = $mtime = $ctime = timelocal (@time);
     };
-!$atime && $opt{reference} and do {
+not $atime and $opt{reference} and do {
     ($atime, $mtime, $ctime) = GetFileTime ($opt{reference});
     };
-!$atime and $atime = $mtime = $ctime = time ();
+not $atime and $atime = $mtime = $ctime = time ();
 
 $opt{a} or $atime = undef;
 $opt{m} or $mtime = undef;

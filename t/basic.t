@@ -1,7 +1,9 @@
-local $^W = 0;
+package main;
 
 use strict;
 use warnings;
+
+local $^W = 0;
 
 use File::Basename;
 use File::Spec;
@@ -21,8 +23,10 @@ BEGIN {
 	print "1..0 # skip Win32::API and Win32API::File not available.\n";
 	exit;
     }
-    $| = 1; plan (tests => 4);
-    print "# Test 1 - Loading the library.\n"}
+    $| = 1;	## no critic (RequireLocalizedPunctuationVars)
+    plan (tests => 4);
+    print "# Test 1 - Loading the library.\n"
+}
 END {print "not ok 1\n" unless $loaded;}
 use Win32API::File::Time qw{GetFileTime SetFileTime utime};
 $loaded = 1;
@@ -115,14 +119,16 @@ eod
 $skip or unlink $testfile;
 
 sub pftime {
-my ($sat, $smt, $sct) = map {scalar localtime $_} @_;
-print <<eod;
+    my ($sat, $smt, $sct) = map {scalar localtime $_} @_;
+    print <<eod;
 # Accessed: $sat
 # Modified: $smt
 #  Created: $sct
 eod
+    return;
 }
 sub sftime {
-map {scalar localtime $_} @_
+    return ( map {scalar localtime $_} @_ );
 }
 
+1;

@@ -1,4 +1,4 @@
-#!/usr/local/bin/perl
+package main;
 
 use strict;
 use warnings;
@@ -29,3 +29,4 @@ eod
     skip ($skip, @got == 0);
 }
 
+1;
