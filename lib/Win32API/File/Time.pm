@@ -351,17 +351,16 @@ return wantarray ? @result : $result[0];
 
 =head1 BUGS
 
-As implemented, GetFileTime () constitutes an access, and
-therefore updates the access time.
+As implemented, C<GetFileTime()> constitutes an access, and therefore
+updates the access time.
 
-The stat () builtin, on the other hand, doesn't report
-an access time change even after GetFileTime () has been
-used. In fact, it looks to me very much like stat () reports
-the modification time in element [8] of the list, but I
-find this nowhere documented.
+The C<stat()> builtin, on the other hand, doesn't report an access time
+change even after C<GetFileTime()> has been used. In fact, it looks to
+me very much like C<stat()> reports the modification time in element [8]
+of the list, but I find this nowhere documented.
 
 FAT file time resolution is 2 seconds at best, as documented
-at F<http://support.microsoft.com/default.aspx?scid=kb;en-us;127830>.
+at L<http://support.microsoft.com/default.aspx?scid=kb;en-us;127830>.
 Access time resolution seems to be to the nearest day.
 
 =head1 ACKNOWLEDGMENTS
@@ -385,25 +384,25 @@ who worked on times.cc in the Cygwin core. This is the B<only>
 implementation of utime I could find which did what B<I> wanted
 it to do.
 
-
 =head1 AUTHOR
 
 Thomas R. Wyant, III (F<Thomas.R.Wyant-III@usa.dupont.com>)
 
-=head1 COPYRIGHT
+=head1 COPYRIGHT AND LICENSE
 
-Copyright 2004, 2005 by
-E. I. DuPont de Nemours and Company, Inc.
-All rights reserved.
-
-Changes since version 0.005 copyright 2007 by Thomas R. Wyant, III.  All
+Copyright (C) 2004-2005 by E. I. DuPont de Nemours and Company, Inc. All
 rights reserved.
 
-=head1 LICENSE
+Copyright (C) 2007, 2010 by Thomas R. Wyant, III
 
-This module is free software; you can use it, redistribute it and/or
-modify it under the same terms as Perl itself. Please see
-L<http://perldoc.perl.org/index-license.html> for current licenses.
+This program is free software; you can redistribute it and/or modify it
+under the same terms as Perl 5.10.0. For more details, see the full text
+of the licenses in the directory LICENSES.
+
+This program is distributed in the hope that it will be useful, but
+without any warranty; without even the implied warranty of
+merchantability or fitness for a particular purpose.
 
 =cut
 
+# ex: set textwidth=72 :

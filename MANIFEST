@@ -4,6 +4,8 @@ eg/README
 eg/touch.pl
 lib/Win32API/File/Time.pm
 Makefile.PL
+LICENSES/Artistic
+LICENSES/Copying
 MANIFEST
 META.yml
 README

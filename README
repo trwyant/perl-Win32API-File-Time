@@ -1,4 +1,8 @@
-Win32API::File::Time
+Win32API-File-Time is Copyright (C) 2004-2005 E. I. DuPont de Nemours
+and Company, Inc. All rights reserved. Copyright (C) 2007, 2010 Thomas R.
+Wyant, III.
+
+DESCRIPTION
 
 This package exposes the Windows file creation time for access and
 modification. It also allows the access, update, and creation times
@@ -23,49 +27,56 @@ This module has the following prerequisites:
   Win32::API
   Win32API::File
 
+INSTALLATION
 
+Most Perl users will want to install using their favorite of either
+'cpan' or 'cpanp'. For either of these, installing Astro::Coord::ECI
+gets you everything. ActivePerl users will want to use ActiveState's
+'ppi', and install Astro-satpass.
 
-INSTALLATION INSTRUCTIONS
------------- ------------
+If for some reason neither of these works for you, you can download the
+distribution and expand it using something like
 
-CPAN kit:
+    tar -xzf Win32API-File-Time-9.999.tar.gz
 
-expand the kit using GZip and TAR (or equivalent). Then issue the
-standard commands:
+Users of MSWin32 (and perhaps other operating systems) may need to
+convert the line endings in the expanded files from Unix to their native
+system before proceeding.
 
- perl Makefile.PL
- nmake
- nmake test
- nmake install
+Then, issue one of the following two incantations:
 
-Note that the "test" step is optional, but recommended.
+    perl Makefile.PL
+    make
+    make test
+    sudo make install
 
-See ftp://ftp.microsoft.com/Softlib/MSLFILES/nmake15.exe for a copy of
-nmake if you need it.
+or
 
+    perl Build.PL
+    ./Build
+    ./Build test
+    sudo ./Build install
 
-PPM kit:
+You should substitute the appropriate program name for 'make', eg nmake
+(typically) under MSWin32, or mms or mmk under VMS. See
+ftp://ftp.microsoft.com/Softlib/MSLFILES/nmake15.exe for a copy of
+nmake for MSWin32 if you need it.
 
-Expand the kit using unzip (or equivalent). Then
+Unix users may want to use 'su' rather than 'sudo' for the install.
+Non-unix users may need to be logged in to an administrative or
+otherwise privileged accout, and turn on privileges (if applicable) for
+the install.
 
- ppm install Win32API-File-Time.ppd
+Of course, since it's pure Perl, you can just expand the kit and drop
+the .pm files into the Win32/Process/Info directory (creating it if
+necessary) in the appropriate place in your @INC directories.
 
+LICENSING INFORMATION
 
-If all else fails:
+This package is free software; you can redistribute it and/or modify it
+under the same terms as Perl 5.10.0. For more details, see the full text
+of the licenses in the directory LICENSES.
 
-Get the .pm files from your kit by whatever means you can, and drop
-them in /site/lib/Win32/Process (or wherever ...).
-
-
-COPYRIGHT NOTICE
---------- ------
-
-Copyright 2004, 2005 by E. I. DuPont de Nemours and Company, Inc.
-All rights reserved.
-
-Modifications since version 0.005 copyright 2007 Thomas R. Wyant, III.
-All rights reserved.
-
-This module is free software; you can use it, redistribute it
-and/or modify it under the same terms as Perl itself.
-
+This program is distributed in the hope that it will be useful, but
+without any warranty; without even the implied warranty of
+merchantability or fitness for a particular purpose.
