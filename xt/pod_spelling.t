@@ -36,6 +36,9 @@ cc
 de
 dll
 exportable
+filename
+merchantability
+orthogonality's
 readonly
 stat
 tuits
