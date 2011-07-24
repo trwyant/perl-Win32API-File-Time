@@ -1,3 +1,5 @@
+use 5.006002;
+
 use strict;
 use warnings;
 
@@ -17,6 +19,7 @@ my %args = (
     requires => {
 	'Win32::API' => 0.01,
 	'Win32API::File' => 0.08,
+	perl => 5.006,
     },
     license => 'perl',
 );
