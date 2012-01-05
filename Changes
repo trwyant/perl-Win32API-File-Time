@@ -1,1 +1,27 @@
-For changes, see the documentation to Win32API::File::Time.
+0.006		16-Oct-2007	T. R. Wyant
+  Re-layout kit, add POD tests.
+
+0.005		04-May-2005	T. R. Wyant
+  Assert FILE_FLAG_BACKUP_SEMANTICS when reading times, so that it works
+    for directories under XP and 2003 server. Thanks to Leigh Power for
+    pointing out the problem and suggesting the solution.
+  Document FAT, and accomodate it in self-test.  Thanks again, Leigh.
+  Centralize code to close handles on error.
+
+0.004		13-Jan-2005	T. R. Wyant
+  Close handles after use. Thanks to Chris Camejo for pointing out the
+    leak.
+  Fix export tags to agree with docs.
+  Tweak "BUGS" documentation.
+
+0.003		17-Dec-2004	T. R. Wyant
+  Correct time conversion.
+  Modify test to not change own date.
+
+0.002		02-Oct-2004	T. R. Wyant
+  Correct MANIFEST and Makefile.PL dependencies.
+  Tweak documentation. No code changes.
+
+0.001		13-May-2004	T. R. Wyant
+  Initial release
+

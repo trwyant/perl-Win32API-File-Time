@@ -50,38 +50,6 @@ supply of tuits.
 
 =cut
 
-#	Modifications:
-
-# 0.001	13-May-2004	T. R. Wyant
-#		Initial version.
-# 0.002	02-Oct-2004	T. R. Wyant
-#		No code changes. Add the readme file to the manifest,
-#		and add the dependencies to Makefile.PL, since they
-#		really _should_ be there, and Active State is
-#		complaining about them missing.
-# 0.003	17-Dec-2004	T. R. Wyant
-#		Reimplement time conversion. Also modified the self-
-#		test to use a scratch file for the date modification
-#		portion of the test.
-# 0.003_01 28-Dec-2004	T. R. Wyant
-#		Close handles after use. In case of error, preserve
-#		the windows error around the close.
-# 0.004	13-Jan-2005	T. R. Wyant
-#		Fix export tags.
-#		Tweak "Bugs" section to more accurately represent what
-#			I think is going on.
-#		Release to CPAN.
-# 0.004_01 28-Apr-2005	T. R. Wyant
-#		Assert FILE_FLAG_BACKUP_SEMANTICS when reading times,
-#			so that it works for directories under XP and
-#			2003 server.
-#		Centralize code to close handles on error.
-# 0.004_02 04-May-2005	T. R. Wyant
-#		Document behaviour of FAT (and change test to
-#		accomodate.
-# 0.005 04-May-2005	T. R. Wyant
-#		Release to CPAN.
-
 package Win32API::File::Time;
 
 use strict;
@@ -332,28 +300,6 @@ return wantarray ? @result : $result[0];
 __END__
 
 =back
-
-=head1 HISTORY
-
- 0.001 Initial release
- 0.002 Correct MANIFEST and Makefile.PL dependencies.
-       Tweak documentation. No code changes.
- 0.003 Correct time conversion.
-       Modify test to not change own date.
- 0.004 Close handles after use. Thanks to Chris
-           Camejo for pointing out the leak.
-       Fix export tags to agree with docs.
-       Tweak "BUGS" documentation.
- 0.005 Assert FILE_FLAG_BACKUP_SEMANTICS when reading
-           times, so that it works for directories
-           under XP and 2003 server. Thanks to Leigh
-           Power for pointing out the problem and
-           suggesting the solution.
-       Document FAT, and accomodate it in self-test.
-           Thanks again, Leigh.
-       Centralize code to close handles on error.
- 0.006 T. R. Wyant
-       Re-layout kit, add POD tests.
 
 =head1 BUGS
 
