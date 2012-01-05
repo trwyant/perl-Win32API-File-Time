@@ -12,8 +12,11 @@ META.json
 META.yml
 README
 t/basic.t
+xt/author/critic.t
 xt/author/executable.t
+xt/author/kwalitee.t
 xt/author/manifest.t
+xt/author/perlcriticrc
 xt/author/pod.t
 xt/author/pod_coverage.t
 xt/author/pod_spelling.t
