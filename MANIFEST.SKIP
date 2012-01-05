@@ -8,7 +8,7 @@ CVS/
 ^pm_to_blib$
 ^t/manifest.t$
 ^meta/
-^MYMETA\.yml$
+^MYMETA\.(?:json|yml)$
 \.old$
 \.svn/
 \.swp$
