@@ -21,12 +21,15 @@ my %args = (
 	'Win32API::File' => 0.08,
 	perl => 5.006,
     },
+    build_requires => {
+	'Test::More'	=> 0.88,
+    },
     license => 'perl',
 );
 
 $mbv >= 0.28 and $args{meta_merge} = {
     no_index => {
-	directory => [qw{inc t}],
+	directory => [ qw{ inc t xt } ],
     },
     resources => {
 	bugtracker => 'https://rt.cpan.org/Public/Dist/Display.html?Name=Win32API-File-Time',

@@ -23,11 +23,33 @@ my %args = (
 
 $mmv >= 6.31 and $args{LICENSE} = 'perl';
 
-$mmv >= 6.4501 and $args{META_MERGE} = {
-    resources => {
-	bugtracker => 'https://rt.cpan.org/Public/Dist/Display.html?Name=Win32API-File-Time',
-	license => 'http://dev.perl.org/licenses/',
-    },
-};
+if ( $mmv >= 6.4501 ) {
+    $args{META_ADD} = {
+	no_index => {
+	    directory => [ qw{ inc t xt } ],
+	},
+    };
+    $args{META_MERGE} = {
+	resources => {
+	    bugtracker => 'https://rt.cpan.org/Public/Dist/Display.html?Name=Win32API-File-Time',
+	    license => 'http://dev.perl.org/licenses/',
+	},
+    };
+}
+
+$mmv >= 6.4701
+    and $args{MIN_PERL_VERSION} = 5.006002;
+
+my %build_requires = (
+    'Test::More'	=> 0.88,
+);
+
+if ( $mmv >= 6.5501 ) {
+    $args{BUILD_REQUIRES} = \%build_requires;
+} elsif ( $mmv >= 6.4501 ) {
+    $args{META_MERGE}{build_requires} = \%build_requires;
+} else {
+    @{ $args{PREREQ_PM} }{ keys %build_requires } = values %build_requires;
+}
 
 WriteMakefile(%args);
