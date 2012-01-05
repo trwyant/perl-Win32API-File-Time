@@ -11,8 +11,8 @@ MANIFEST
 META.yml
 README
 t/basic.t
-xt/executable.t
-xt/manifest.t
-xt/pod.t
-xt/pod_coverage.t
-xt/pod_spelling.t
+xt/author/executable.t
+xt/author/manifest.t
+xt/author/pod.t
+xt/author/pod_coverage.t
+xt/author/pod_spelling.t
