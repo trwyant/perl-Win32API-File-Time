@@ -1,6 +1,7 @@
 ^blib/
 ^Build$
 CVS/
+^.git
 ^foo
 ^Makefile$
 ^MANIFEST\.
