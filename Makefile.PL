@@ -3,23 +3,22 @@ use 5.006002;
 use strict;
 use warnings;
 
+use lib qw{ inc };
+
 use Config;
 use ExtUtils::MakeMaker;
+use My::Module::Meta;
 
-$ENV{AUTHOR_BUILD}
-    or 'MSWin32' eq $^O
-    or 'cygwin' eq $^O
-    or die "OS unsupported\n";
+( my $mmv = ExtUtils::MakeMaker->VERSION() ) =~ s/_//g;
 
-(my $mmv = ExtUtils::MakeMaker->VERSION) =~ s/_//g;
+my $meta = My::Module::Meta->new();
+
+$meta->os_check();
 
 my %args = (
     NAME => 'Win32API::File::Time',
     VERSION_FROM => 'lib/Win32API/File/Time.pm',
-    PREREQ_PM => {
-	'Win32::API' => 0.01,
-	'Win32API::File' => 0.08,
-    },
+    PREREQ_PM => $meta->requires(),
     PL_FILES => {},	# Prevent old MakeMaker from running Build.PL
     'dist' => {COMPRESS => 'gzip', SUFFIX => 'gz'},
     AUTHOR => 'Tom Wyant (Thomas.R.Wyant-III@usa.dupont.com)',
@@ -28,33 +27,20 @@ my %args = (
 
 $mmv >= 6.31 and $args{LICENSE} = 'perl';
 
-if ( $mmv >= 6.4501 ) {
-    $args{META_ADD} = {
-	no_index => {
-	    directory => [ qw{ inc t xt } ],
-	},
-    };
-    $args{META_MERGE} = {
-	resources => {
-	    bugtracker => 'https://rt.cpan.org/Public/Dist/Display.html?Name=Win32API-File-Time',
-	    license => 'http://dev.perl.org/licenses/',
-	},
-    };
-}
+$mmv >= 6.4501
+    and $args{META_MERGE} = $meta->meta_merge();
 
 $mmv >= 6.4701
-    and $args{MIN_PERL_VERSION} = 5.006002;
-
-my %build_requires = (
-    'Test::More'	=> 0.88,
-);
+    and $args{MIN_PERL_VERSION} = $meta->requires_perl;
 
 if ( $mmv >= 6.5501 ) {
-    $args{BUILD_REQUIRES} = \%build_requires;
+    $args{BUILD_REQUIRES} = $meta->build_requires();
 } elsif ( $mmv >= 6.4501 ) {
-    $args{META_MERGE}{build_requires} = \%build_requires;
+    $args{META_MERGE}{build_requires} = $meta->build_requires();
 } else {
-    @{ $args{PREREQ_PM} }{ keys %build_requires } = values %build_requires;
+    my $build_requires = $meta->build_requires();
+    @{ $args{PREREQ_PM} }{ keys %{ $build_requires } } =
+	values %{ $build_requires };
 }
 
 WriteMakefile(%args);

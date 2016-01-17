@@ -3,6 +3,7 @@ Changes
 eg/README
 eg/touch.pl
 inc/My/Module/Build.pm
+inc/My/Module/Meta.pm
 lib/Win32API/File/Time.pm
 Makefile.PL
 LICENSES/Artistic
