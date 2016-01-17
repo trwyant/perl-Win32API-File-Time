@@ -15,12 +15,12 @@ my $reactos = 'MSWin32' eq $^O && 'reactos' eq lc $ENV{OS};
 my $test_num = 1;
 my $loaded;
 BEGIN {
-    if ($ENV{DEVELOPER_TEST} && !eval {
+    unless (eval {
 	    require Win32::API;
 	    require Win32API::File;
 	    1;
 	}) {
-	print "1..0 # skip Win32::API and Win32API::File not available.\n";
+	print "1..0 # skip Win32::API and/or Win32API::File not available.\n";
 	exit;
     }
     $| = 1;	## no critic (RequireLocalizedPunctuationVars)
