@@ -3,7 +3,6 @@ package main;
 use strict;
 use warnings;
 
-my $ok;
 BEGIN {
     eval {
 	require Test::More;

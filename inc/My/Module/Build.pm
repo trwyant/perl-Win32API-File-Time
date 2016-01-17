@@ -9,7 +9,7 @@ use Carp;
 
 
 sub ACTION_authortest {
-    my ( $self, @args ) = @_;
+    my ( $self ) = @_;		# Arguments unused
 
     local $ENV{AUTHOR_TESTING} = 1;
 

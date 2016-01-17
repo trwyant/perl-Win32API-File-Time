@@ -198,7 +198,7 @@ $FileTimeToLocalFileTime ||= _map (
 	'KERNEL32', 'FileTimeToLocalFileTime', [qw{P P}], 'I');
 my $st = pack 'ssssssss', 0, 0, 0, 0, 0, 0, 0, 0;
 foreach my $ft (@args) {
-    my ($low, $high) = unpack 'LL', $ft;
+    my (undef, $high) = unpack 'LL', $ft;	# $low unused
     $high or do {
 	push @result, undef;
 	next;
