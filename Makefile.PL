@@ -6,6 +6,11 @@ use warnings;
 use Config;
 use ExtUtils::MakeMaker;
 
+$ENV{AUTHOR_BUILD}
+    or 'MSWin32' eq $^O
+    or 'cygwin' eq $^O
+    or die "OS unsupported\n";
+
 (my $mmv = ExtUtils::MakeMaker->VERSION) =~ s/_//g;
 
 my %args = (

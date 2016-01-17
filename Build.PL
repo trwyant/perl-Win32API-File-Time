@@ -10,6 +10,11 @@ use Module::Build;
 use Config;
 use FileHandle;
 
+$ENV{AUTHOR_BUILD}
+    or 'MSWin32' eq $^O
+    or 'cygwin' eq $^O
+    or die "OS unsupported\n";
+
 (my $mbv = Module::Build->VERSION) =~ s/_//g;
 
 my %args = (
