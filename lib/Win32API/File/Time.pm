@@ -56,7 +56,6 @@ use strict;
 use warnings;
 
 use base qw{Exporter};
-use vars qw{@EXPORT_OK %EXPORT_TAGS $VERSION};
 use vars qw{
 	$FileTimeToSystemTime
 	$FileTimeToLocalFileTime
@@ -71,10 +70,10 @@ use Time::Local;
 use Win32::API;
 use Win32API::File qw{:ALL};
 
-$VERSION = '0.006';
+our $VERSION = '0.006';
 
-@EXPORT_OK = qw{GetFileTime SetFileTime utime};
-%EXPORT_TAGS = (
+our @EXPORT_OK = qw{GetFileTime SetFileTime utime};
+our %EXPORT_TAGS = (
     all => [@EXPORT_OK],
     win => [qw{GetFileTime SetFileTime}],
     );
