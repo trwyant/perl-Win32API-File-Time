@@ -1,3 +1,6 @@
+0.006_02	2016-01-19	T. R. Wyant
+  Add ProhibitUnusedVarsStricter to xt/author/perlcriticrc
+
 0.006_01	2016-01-18	T. R. Wyant
   Use 'our' for $VERSION, exporter symbols
 
