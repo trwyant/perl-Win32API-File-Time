@@ -1,3 +1,6 @@
+0.007		2016-01-26	T. R. Wyant
+  No changes since 0.006_02.
+
 0.006_02	2016-01-19	T. R. Wyant
   Add ProhibitUnusedVarsStricter to xt/author/perlcriticrc
 
