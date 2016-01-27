@@ -27,7 +27,7 @@ sub Call {
     return $self->( @_ );
 }
 
-sub _mock__KERNEL32__FileTimeToSystemTime {
+sub _mock__KERNEL32__FileTimeToSystemTime {	## no critic (RequireArgUnpacking)
     my ( undef, $ft ) = unpack 'LL', $_[0];
     my @local = localtime $ft;
     @local = reverse @local[0..5];
@@ -39,7 +39,7 @@ sub _mock__KERNEL32__FileTimeToSystemTime {
     return 1;
 }
 
-sub _mock__KERNEL32__GetFileTime {
+sub _mock__KERNEL32__GetFileTime {	## no critic (RequireArgUnpacking)
     my ( $fh ) = @_;
     my ( undef, undef, undef, undef, undef, undef, undef, undef, $atime,
 	$mtime, $ctime ) = stat $fh
@@ -67,7 +67,7 @@ sub _mock__KERNEL32__SetFileTime {
     return utime $atime, $mtime, $fh;
 }
 
-sub _mock__KERNEL32__SystemTimeToFileTime {
+sub _mock__KERNEL32__SystemTimeToFileTime {	## no critic (RequireArgUnpacking)
     my @localtime = unpack 'sssssss', $_[0];
     splice @localtime, 2, 1;
     $localtime[0] -= 1900;

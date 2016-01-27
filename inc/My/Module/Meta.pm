@@ -60,7 +60,7 @@ sub os_check {
 }
 
 sub requires {
-    my ( $self, @extra ) = @_;
+    my ( undef, @extra ) = @_;	# Ibvocant unused
 ##  if ( ! $self->distribution() ) {
 ##  }
     return {

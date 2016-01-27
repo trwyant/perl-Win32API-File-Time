@@ -11,8 +11,6 @@ use lib qw{ inc };
 
 use My::Module::Test;
 
-my $reactos = 'MSWin32' eq $^O && $ENV{OS} =~ m/ reactos /smxi;
-
 require_ok 'Win32API::File::Time'
     or BAIL_OUT;
 
