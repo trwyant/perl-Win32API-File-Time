@@ -12,17 +12,16 @@ BEGIN {
 	print "1..0 # skip Test::More required to test pod coverage.\n";
 	exit;
     };
-    'MSWin32' eq $^O or do {	# Dummy up enough to make module compile.
-	no warnings qw{once};
-	$INC{'Win32/API.pm'} = 'dummy';		## no critic (RequireLocalizedPunctuationVars)
-	$INC{'Win32API/File.pm'} = 'dummy';	## no critic (RequireLocalizedPunctuationVars)
-	*Win32API::File::Time::FILE_ATTRIBUTE_NORMAL = sub {};
-	*Win32API::File::Time::FILE_FLAG_BACKUP_SEMANTICS = sub {};
-	*Win32API::File::Time::FILE_SHARE_READ = sub {};
-	*Win32API::File::Time::FILE_SHARE_WRITE = sub {};
-	*Win32API::File::Time::FILE_READ_ATTRIBUTES = sub {};
-	*Win32API::File::Time::FILE_WRITE_ATTRIBUTES = sub {};
-	*Win32API::File::Time::OPEN_EXISTING = sub {};
+
+    eval {
+	require lib;
+	lib->import();
+	require My::Module::Test;
+	My::Module::Test->import();
+	1;
+    } or do {
+	print "1..0 # skip My::Module::TEst required to test pod coverage.\n";
+	exit;
     };
     eval {
 	require Test::Pod::Coverage;

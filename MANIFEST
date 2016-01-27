@@ -2,12 +2,15 @@ Build.PL
 Changes
 eg/README
 eg/touch.pl
+inc/mock/Win32/API.pm
+inc/mock/Win32API/File.pm
 inc/My/Module/Build.pm
 inc/My/Module/Meta.pm
+inc/My/Module/Test.pm
 lib/Win32API/File/Time.pm
-Makefile.PL
 LICENSES/Artistic
 LICENSES/Copying
+Makefile.PL
 MANIFEST
 META.json
 META.yml

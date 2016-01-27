@@ -10,6 +10,9 @@ use File::Spec;
 use FileHandle;
 use Test;
 
+use lib qw{ inc };
+use My::Module::Test;
+
 my $reactos = 'MSWin32' eq $^O && 'reactos' eq lc $ENV{OS};
 
 my $test_num = 1;
@@ -71,7 +74,7 @@ $rslt ? pftime ($atime, $mtime, $ctime) : print <<eod;
 # $^E
 eod
 
-my $testfile = File::Spec->catfile ($ENV{TEMP} || $ENV{TMP}, 'Win32API-File-Time.tmp');
+my $testfile = File::Spec->catfile ($ENV{TEMP} || $ENV{TMP} || $ENV{TMPDIR}, 'Win32API-File-Time.tmp');
 my $skip = FileHandle->new (">$testfile") ? '' : "Unable to create $testfile";
 
 $test_num++;
