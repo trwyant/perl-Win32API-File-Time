@@ -13,14 +13,18 @@ BEGIN {
 	exit;
     };
 
+}
+
+BEGIN {
     eval {
 	require lib;
-	lib->import();
+	lib->import( 'inc' );
 	require My::Module::Test;
 	My::Module::Test->import();
 	1;
     } or do {
-	print "1..0 # skip My::Module::TEst required to test pod coverage.\n";
+	diag $@;
+	print "1..0 # skip My::Module::Test required to test pod coverage.\n";
 	exit;
     };
     eval {
