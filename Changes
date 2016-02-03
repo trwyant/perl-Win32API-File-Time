@@ -1,3 +1,10 @@
+0.007_01	2016-02-02	T. R. Wyant
+  Correct xt/author/pod_coverage.t
+
+  Convert to Test::More; split out t/file.t.
+
+  Add machinery to test under non-Windows systems
+
 0.007		2016-01-26	T. R. Wyant
   No changes since 0.006_02.
 
