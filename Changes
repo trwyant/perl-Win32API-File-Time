@@ -1,3 +1,11 @@
+0.007_02	2016-02-10	T. R. Wyant
+  Code and documentation cleanup.
+    This is mostly white space and documentation, but I also switched
+    completely over to unpacking arguments by array assignment rather
+    than shift(), and ended up completely reworking the logic around
+    ${^WIDE_SYSTEM_CALLS}, which it turns out was silently (or almost
+    so) retracted in Perl 5.8.1.
+
 0.007_01	2016-02-02	T. R. Wyant
   Correct xt/author/pod_coverage.t
 

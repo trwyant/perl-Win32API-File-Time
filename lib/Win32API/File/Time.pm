@@ -64,7 +64,7 @@ use Win32API::File qw{:ALL};
 
 use constant SUPPORT_WIDE_SYSTEM_CALLS => $] gt '5.008' ? 0 : 1;
 
-our $VERSION = '0.007_01';
+our $VERSION = '0.007_02';
 
 our @EXPORT_OK = qw{ GetFileTime SetFileTime utime };
 our %EXPORT_TAGS = (

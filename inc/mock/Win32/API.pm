@@ -8,7 +8,7 @@ use warnings;
 use Carp;
 use Time::Local ();
 
-our $VERSION = '0.007_01';
+our $VERSION = '0.007_02';
 
 sub new {
     my ( $class, $lib, $sub ) = @_;
