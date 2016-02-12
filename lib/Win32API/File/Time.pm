@@ -40,13 +40,13 @@ supported:
  :all => exports everything exportable
  :win => exports GetFileTime and SetFileTime
 
-Wide system calls were implemented based on the truth of
-C<${^WIDE_SYSTEM_CALLS}>, but this was fairly silently retracted in Perl
-5.8.1. The code for them is still in place, but support for it is
-problematic, and will require the co-operation of someone with a system
-old enough to actually have this functionality.
+Wide system calls are implemented (based on the truth of
+${^WIDE_SYSTEM_CALLS}) but not currently supported. In other words: I
+wrote the code, but haven't tested it and don't have any plans to.
+Feedback will be accepted, and implemented when I get a sufficient
+supply of tuits.
 
-The following subroutines are provided by this module:
+=over 4
 
 =cut
 
@@ -55,33 +55,30 @@ package Win32API::File::Time;
 use strict;
 use warnings;
 
-use base qw{ Exporter };
+use base qw{Exporter};
+use vars qw{
+	$FileTimeToSystemTime
+	$FileTimeToLocalFileTime
+	$GetFileTime
+	$LocalFileTimeToFileTime
+	$SetFileTime
+	$SystemTimeToFileTime
+	};
 
 use Carp;
 use Time::Local;
 use Win32::API;
 use Win32API::File qw{:ALL};
 
-use constant SUPPORT_WIDE_SYSTEM_CALLS => $] gt '5.008' ? 0 : 1;
+our $VERSION = '0.007_01';
 
-our $VERSION = '0.007_02';
-
-our @EXPORT_OK = qw{ GetFileTime SetFileTime utime };
+our @EXPORT_OK = qw{GetFileTime SetFileTime utime};
 our %EXPORT_TAGS = (
-    all => [ @EXPORT_OK ],
-    win => [ qw{ GetFileTime SetFileTime } ],
-);
+    all => [@EXPORT_OK],
+    win => [qw{GetFileTime SetFileTime}],
+    );
 
-my $FileTimeToSystemTime;
-my $FileTimeToLocalFileTime;
-my $GetFileTime;
-my $LocalFileTimeToFileTime;
-my $SetFileTime;
-my $SystemTimeToFileTime;
-
-=head2 GetFileTime
-
- my ( $atime, $mtime, $ctime ) = GetFileTime ( $filename );
+=item ($atime, $mtime, $ctime) = GetFileTime ($filename);
 
 This subroutine returns the access, modification, and creation times of
 the given file. If it fails, nothing is returned, and the error code
@@ -94,23 +91,19 @@ has been exposed for orthogonality's sake.
 =cut
 
 sub GetFileTime {
-    my ( $fn ) = @_;
-    defined $fn
-	or croak 'usage: GetFileTime( filename )';
-    my $fh = _get_handle( $fn )
-	or return;
-    $GetFileTime ||= _map ( 'KERNEL32', 'GetFileTime',
-	[ qw{ N P P P } ], 'I' );
-    my $atime = my $mtime = my $ctime = pack 'LL', 0, 0; # Prealloc 64 bits.
-    $GetFileTime->Call( $fh, $ctime, $atime, $mtime )
-	or return _close_handle( $fh );
-    CloseHandle( $fh );
-    return _filetime_to_perltime( $atime, $mtime, $ctime );
+my $fn = shift or croak "usage: GetFileTime (filename)";
+my $fh = _get_handle ($fn) or return;
+$GetFileTime ||= _map ('KERNEL32', 'GetFileTime', [qw{N P P P}], 'I');
+my ($atime, $mtime, $ctime);
+$atime = $mtime = $ctime = pack 'LL', 0, 0;	# Preallocate 64 bits.
+$GetFileTime->Call ($fh, $ctime, $atime, $mtime) or
+    return _close_handle ($fh);
+CloseHandle ($fh);
+return _filetime_to_perltime ($atime, $mtime, $ctime);
 }
 
-=head2 SetFileTime
 
- SetFileTime( $filename, $atime, $mtime, $ctime );
+=item SetFileTime (filename, atime, mtime, ctime);
 
 This subroutine sets the access, modification, and creation times of
 the given file. The return is true for success, and false for failure.
@@ -119,36 +112,30 @@ In the latter case, $^E will contain the error.
 If you don't want to set all of the times, pass 0 or undef for the
 times you don't want to set. For example,
 
- my $now = time();
- SetFileTime( $filename, $now, $now );
+ $now = time ();
+ SetFileTime ($filename, $now, $now);
 
 is equivalent to the "touch" command for the given file.
 
 =cut
 
 sub SetFileTime {
-    my ( $fn, $p_atime, $p_mtime, $p_ctime ) = @_;
-    defined $fn
-	or croak 'usage: SetFileTime( filename, atime, mtime, ctime )';
-    my $atime = _perltime_to_filetime( $p_atime );
-    my $mtime = _perltime_to_filetime( $p_mtime );
-    my $ctime = _perltime_to_filetime( $p_ctime );
-    # We assume we can do something useful for an undef.
-    $SetFileTime ||= _map( 'KERNEL32', 'SetFileTime',
-	[ qw{ N P P P } ], 'I' );
-    my $fh = _get_handle( $fn, 1 )
-	or return;
+my $fn = shift or croak "usage: SetFileTime (filename, atime, mtime, ctime)";
+my $atime = _perltime_to_filetime (shift);
+my $mtime = _perltime_to_filetime (shift);
+my $ctime = _perltime_to_filetime (shift);
+# We assume we can do something useful for an undef.
+$SetFileTime ||= _map ('KERNEL32', 'SetFileTime', [qw{N P P P}], 'I');
+my $fh = _get_handle ($fn, 1) or return;
 
-    $SetFileTime->Call( $fh, $ctime, $atime, $mtime )
-	or return _close_handle( $fh );
+$SetFileTime->Call ($fh, $ctime, $atime, $mtime) or
+    return _close_handle ($fh);
 
-    CloseHandle ($fh);
-    return 1;
+CloseHandle ($fh);
+return 1;
 }
 
-=head2 utime
-
- utime( $atime, $mtime, $filename, ... )
+=item utime ($atime, $mtime, $filename, ...)
 
 This subroutine overrides the built-in of the same name. It does
 exactly the same thing, but has a different idea than the built-in
@@ -161,13 +148,12 @@ error encountered.
 =cut
 
 sub utime {	## no critic (ProhibitBuiltinHomonyms)
-    my ( $atime, $mtime, @args ) = @_;
-    my $num = 0;
-    foreach my $fn ( @args ) {
-	SetFileTime( $fn, $atime, $mtime )
-	    and $num++;
+my ( $atime, $mtime, @args ) = @_;
+my $num = 0;
+foreach my $fn (@args) {
+    SetFileTime ($fn, $atime, $mtime) and $num++;
     }
-    return $num;
+return $num;
 }
 
 
@@ -181,11 +167,11 @@ sub utime {	## no critic (ProhibitBuiltinHomonyms)
 #	around the call.
 
 sub _close_handle {
-    my ( $fh ) = @_;
-    my $err = Win32::GetLastError();
-    CloseHandle( $fh );
-    $^E = $err;	## no critic (RequireLocalizedPunctuationVars)
-    return;
+my $fh = shift;
+my $err = Win32::GetLastError ();
+CloseHandle ($fh);
+$^E = $err;	## no critic (RequireLocalizedPunctuationVars)
+return;
 }
 
 
@@ -203,32 +189,31 @@ sub _close_handle {
 #	results of the stat () function.
 
 sub _filetime_to_perltime {
-    my @args = @_;
-    my @result;
-    $FileTimeToSystemTime ||= _map(
-	    'KERNEL32', 'FileTimeToSystemTime', [ qw{ P P } ], 'I' );
-    $FileTimeToLocalFileTime ||= _map(
-	    'KERNEL32', 'FileTimeToLocalFileTime', [ qw{ P P } ], 'I' );
-    my $st = pack 'ssssssss', 0, 0, 0, 0, 0, 0, 0, 0;
-    foreach my $ft ( @args ) {
-	my (undef, $high) = unpack 'LL', $ft;	# $low unused
-	$high or do {
-	    push @result, undef;
-	    next;
+my @args = @_;
+my @result;
+$FileTimeToSystemTime ||= _map (
+	'KERNEL32', 'FileTimeToSystemTime', [qw{P P}], 'I');
+$FileTimeToLocalFileTime ||= _map (
+	'KERNEL32', 'FileTimeToLocalFileTime', [qw{P P}], 'I');
+my $st = pack 'ssssssss', 0, 0, 0, 0, 0, 0, 0, 0;
+foreach my $ft (@args) {
+    my (undef, $high) = unpack 'LL', $ft;	# $low unused
+    $high or do {
+	push @result, undef;
+	next;
 	};
-	my $lf = $ft;	# Just to get the space allocated.
-	$FileTimeToLocalFileTime->Call( $ft, $lf )
-	    and $FileTimeToSystemTime->Call( $lf, $st )
-	    or do {
-		push @result, undef;
-		next;
-	    };
-	my @tm = unpack 'ssssssss', $st;
-	push @result, $tm[0] > 0 ?
-	    timelocal( @tm[6, 5, 4, 3], $tm[1] - 1, $tm[0] ) :
-	    undef;
+    my $lf = $ft;	# Just to get the space allocated.
+    $FileTimeToLocalFileTime->Call ($ft, $lf) and
+	$FileTimeToSystemTime->Call ($lf, $st) or do {
+	push @result, undef;
+	next;
+	};
+    my @tm = unpack 'ssssssss', $st;
+    push @result, $tm[0] > 0 ?
+	timelocal (@tm[6, 5, 4, 3], $tm[1] - 1, $tm[0]) :
+	undef;
     }
-    return wantarray ? @result : $result[0];
+return wantarray ? @result : $result[0];
 }
 
 
@@ -239,26 +224,32 @@ sub _filetime_to_perltime {
 #	appropriately for  writing attributes; otherwise it is
 #	configured appropriately for reading attributes.
 
-{
-    my @attr = ( FILE_WRITE_ATTRIBUTES, FILE_READ_ATTRIBUTES );
-    my @shar = ( FILE_SHARE_WRITE | FILE_SHARE_READ, FILE_SHARE_READ );
-    my @sem  = ( FILE_ATTRIBUTE_NORMAL | FILE_FLAG_BACKUP_SEMANTICS,
-	FILE_FLAG_BACKUP_SEMANTICS );
+sub _get_handle {
+my $fn = shift;
+my $write = shift;
 
-    sub _get_handle {
-	my ( $fn, $write ) = @_;
-	$write = $write ? 1 : 0;	# Make into array index
-
-	my $code = __PACKAGE__->can(
-	    _use_wide_system_calls() ? 'CreateFileW' : 'CreateFile' );
-	my $handle = $code->( $fn, $attr[$write], $shar[$write], [],
-	    OPEN_EXISTING, $sem[$write], 0,
-	) or do {
-	    $^E = Win32::GetLastError();	## no critic (RequireLocalizedPunctuationVars)
-	    return;
-	};
-	return $handle;
-    }
+my $handle = ${^WIDE_SYSTEM_CALLS} ?
+    CreateFileW ($fn,
+	($write ? FILE_WRITE_ATTRIBUTES : FILE_READ_ATTRIBUTES),
+	($write ? FILE_SHARE_WRITE | FILE_SHARE_READ : FILE_SHARE_READ),
+	[],
+	OPEN_EXISTING,
+	($write ? FILE_ATTRIBUTE_NORMAL | FILE_FLAG_BACKUP_SEMANTICS : FILE_FLAG_BACKUP_SEMANTICS),
+	0,
+	) :
+    CreateFile ($fn,
+	($write ? FILE_WRITE_ATTRIBUTES : FILE_READ_ATTRIBUTES),
+	($write ? FILE_SHARE_WRITE | FILE_SHARE_READ : FILE_SHARE_READ),
+	[],
+	OPEN_EXISTING,
+	($write ? FILE_ATTRIBUTE_NORMAL | FILE_FLAG_BACKUP_SEMANTICS : FILE_FLAG_BACKUP_SEMANTICS),
+	0,
+	)
+  or do {
+    $^E = Win32::GetLastError ();	## no critic (RequireLocalizedPunctuationVars)
+    return;
+    };
+return $handle;
 }
 
 
@@ -267,8 +258,8 @@ sub _filetime_to_perltime {
 #	This subroutine calls Win32API to map an entry point.
 
 sub _map {
-    return Win32::API->new (@_) ||
-	croak "Error - Failed to map $_[1] from $_[0]: $^E";
+return Win32::API->new (@_) ||
+    croak "Error - Failed to map $_[1] from $_[0]: $^E";
 }
 
 
@@ -281,35 +272,33 @@ sub _map {
 
 sub _perltime_to_filetime {
     my @args = @_;
-    my @result;
-    $SystemTimeToFileTime ||= _map(
-	'KERNEL32', 'SystemTimeToFileTime', [ qw{ P P } ], 'I' );
-    $LocalFileTimeToFileTime ||= _map (
-	'KERNEL32', 'LocalFileTimeToFileTime', [ qw{ P P } ], 'I' );
-    my $zero = pack 'LL', 0, 0;		# To get a quadword zero.
-    my $ft = my $lf = $zero;		# To get the space allocated.
-    foreach my $pt ( @args ) {
-	if ( defined $pt ) {
-	    my @tm = localtime $pt;
-	    my $st = pack 'ssssssss', $tm[5] + 1900, $tm[4] + 1, 0,
-		@tm[3, 2, 1, 0], 0;
-	    push @result, (
-		$SystemTimeToFileTime->Call( $st, $lf ) &&
-		$LocalFileTimeToFileTime->Call( $lf, $ft ) ) ? $ft : $zero;
-	} else {
-	    push @result, $zero;
+my @result;
+$SystemTimeToFileTime ||= _map (
+	'KERNEL32', 'SystemTimeToFileTime', [qw{P P}], 'I');
+$LocalFileTimeToFileTime ||= _map (
+	'KERNEL32', 'LocalFileTimeToFileTime', [qw{P P}], 'I');
+my $zero = pack 'LL', 0, 0;	# To get a quadword zero.
+my ($ft, $lf) = ($zero, $zero);	# To get the space allocated.
+foreach my $pt (@args) {
+    if (defined $pt) {
+	my @tm = localtime ($pt);
+	my $st = pack 'ssssssss', $tm[5] + 1900, $tm[4] + 1, 0,
+	    @tm[3, 2, 1, 0], 0;
+	push @result, $SystemTimeToFileTime->Call ($st, $lf)  &&
+	    $LocalFileTimeToFileTime->Call ($lf, $ft) ? $ft : $zero;
+	}
+      else {
+	push @result, $zero;
 	}
     }
-    return wantarray ? @result : $result[0];
+return wantarray ? @result : $result[0];
 }
-
-*_use_wide_system_calls = SUPPORT_WIDE_SYSTEM_CALLS ? sub {
-    return ${^WIDE_SYSTEM_CALLS} ? 1 : 0;
-} : sub { return 0; };
 
 1;
 
 __END__
+
+=back
 
 =head1 BUGS
 
@@ -342,13 +331,13 @@ formerly known as Hip Communications), who found a way to reconcile
 Windows' and Perl's subtly different ideas of what time it is.
 
 The folks of Cygwin (F<http://www.cygwin.com/>), especially those
-who worked on F<times.cc> in the Cygwin core. This is the B<only>
+who worked on times.cc in the Cygwin core. This is the B<only>
 implementation of utime I could find which did what B<I> wanted
 it to do.
 
 =head1 AUTHOR
 
-Thomas R. Wyant, III ( F<wyant at cpan dot org> )
+Thomas R. Wyant, III (F<Thomas.R.Wyant-III@usa.dupont.com>)
 
 =head1 COPYRIGHT AND LICENSE
 
