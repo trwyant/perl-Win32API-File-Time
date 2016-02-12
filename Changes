@@ -1,3 +1,8 @@
+0.007_03	2016-02-11	T. R. Wyant
+  Add Makefile targets authortest, testcover.
+
+  Revert "Code and documentation cleanup"
+
 0.007_02	2016-02-10	T. R. Wyant
   Code and documentation cleanup.
     This is mostly white space and documentation, but I also switched
