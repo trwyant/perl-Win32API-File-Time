@@ -1,3 +1,6 @@
+0.007_04	2016-02-19	T. R. Wyant
+  Try to sanity-check KERNEL32 calls in non-Windows testing
+
 0.007_03	2016-02-11	T. R. Wyant
   Add Makefile targets authortest, testcover.
 
