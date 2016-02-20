@@ -41,10 +41,34 @@ use constant FILE_SHARE_WRITE		=> 2;
 use constant OPEN_EXISTING		=> 3;
 
 sub CloseHandle {
+    my ( $fh ) = @_;
+    defined $fh
+	or croak 'Missing file handle';
+    return;
 }
 
 sub CreateFile {
-    my ( $fn ) = @_;
+    my ( $fn, $rw, $share, $sec, $create, $flag, $tplt ) = @_;
+    'ARRAY' eq ref $sec
+	and not @{ $sec }
+	or croak "Unexpected security attributes $sec";
+    OPEN_EXISTING == $create
+	or croak "Unexpected creation/disposition code $create";
+    $tplt
+	and croak "Unexpected template handle $tplt";
+    if ( FILE_WRITE_ATTRIBUTES == $rw ) {
+	( FILE_SHARE_WRITE | FILE_SHARE_READ ) == $share
+	    or croak "Unexpectes write share code $share";
+	( FILE_ATTRIBUTE_NORMAL | FILE_FLAG_BACKUP_SEMANTICS ) == $flag
+	    or croak "Unexpected write flags $flag";
+    } elsif ( FILE_READ_ATTRIBUTES == $rw ) {
+	FILE_SHARE_READ == $share
+	    or croak "Unexpectes read share code $share";
+	FILE_FLAG_BACKUP_SEMANTICS == $flag
+	    or croak "Unexpected read flags $flag";
+    } else {
+	croak "Unexpected CreateFile access code $rw";
+    }
     return $fn;
 }
 

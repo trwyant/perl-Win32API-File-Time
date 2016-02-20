@@ -10,7 +10,7 @@ use Test::More 0.88;	# for done_testing.
 
 use lib qw{ inc };
 
-use My::Module::Test;
+use My::Module::Test qw{ :all };
 use Win32API::File::Time qw{ :all };	# Must be loaded after My::Module::Test
 
 my $reactos = 'MSWin32' eq $^O && $ENV{OS} =~ m/ reactos /smxi;
@@ -21,7 +21,51 @@ my ( undef, undef, undef, undef, undef, undef, undef, undef,
     or BAIL_OUT "Failed to stat $me: $!";
 note spftime( "$me via stat()", $patim, $pmtim, $pctim );
 
+# The set_up_trace and check_trace calls are an attempt to be able to do
+# a meaningful test under some OS other than Windows. If maintenance
+# ever goes to a Windows machine, these can be stripped out, since there
+# will be no reason to run the tests under a non-Windows system.
+set_up_trace;
 my ( $atime, $mtime, $ctime ) = GetFileTime( $me );
+check_trace [
+    [
+	"GetFileTime",
+	"t/file.t",
+	"\0\0\0\0\0\0\0\0",
+	"\0\0\0\0\0\0\0\0",
+	"\0\0\0\0\0\0\0\0"
+    ],
+    [
+	"FileTimeToLocalFileTime",
+	get_atime $me,
+	get_atime $me,
+    ],
+    [
+	"FileTimeToSystemTime",
+	get_atime $me,
+	"\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"
+    ],
+    [
+	"FileTimeToLocalFileTime",
+	get_mtime $me,
+	get_mtime $me,
+    ],
+    [
+	"FileTimeToSystemTime",
+	get_mtime $me,
+	get_sys_atime $me,	# Because of GetFileTime internals
+    ],
+    [
+	"FileTimeToLocalFileTime",
+	get_ctime $me,
+	get_ctime $me,
+    ],
+    [
+	"FileTimeToSystemTime",
+	get_ctime $me,
+	get_sys_mtime $me,	# Because of GetFileTime internals
+    ]
+], 'GetFileTime KERNEL32 calls';
 note spftime( "$me via GetFileTime()", $atime, $mtime, $ctime );
 
 cmp_ok $mtime, '==', $pmtim, 'Got same modification time as stat()'
@@ -54,7 +98,37 @@ CORE::utime $now, $now, $temp_name
 note spftime( "$temp_name before SetFileTime()", $patim, $pmtim, $pctim );
 
 my $want = $now + 10;
+set_up_trace;
 SetFileTime( $temp_name, $want, $want );
+check_trace [
+    [
+	"SystemTimeToFileTime",
+	sys_time $want,
+	"\0\0\0\0\0\0\0\0"
+    ],
+    [
+	"LocalFileTimeToFileTime",
+	file_time $want,
+	"\0\0\0\0\0\0\0\0"
+    ],
+    [
+	"SystemTimeToFileTime",
+	sys_time $want,
+	"\0\0\0\0\0\0\0\0"
+    ],
+    [
+	"LocalFileTimeToFileTime",
+	file_time $want,
+	"\0\0\0\0\0\0\0\0"
+    ],
+    [
+	"SetFileTime",
+	$temp_name,
+	"\0\0\0\0\0\0\0\0",
+	file_time $want,
+	file_time $want,
+    ]
+], 'SetFileTime KERNEL32 calls';
 ( undef, undef, undef, undef, undef, undef, undef, undef,
     $patim, $pmtim, $pctim ) = stat $temp_name;
 note spftime( "$temp_name after SetFileTime()", $patim, $pmtim, $pctim );
@@ -66,7 +140,37 @@ SetFileTime: @{[ scalar localtime $want ]}
 EOD
 
 $want += 10;
+set_up_trace;
 utime( $want, $want, $temp_name );
+check_trace [
+    [
+	"SystemTimeToFileTime",
+	sys_time $want,
+	"\0\0\0\0\0\0\0\0"
+    ],
+    [
+	"LocalFileTimeToFileTime",
+	file_time $want,
+	"\0\0\0\0\0\0\0\0"
+    ],
+    [
+	"SystemTimeToFileTime",
+	sys_time $want,
+	"\0\0\0\0\0\0\0\0"
+    ],
+    [
+	"LocalFileTimeToFileTime",
+	file_time $want,
+	"\0\0\0\0\0\0\0\0"
+    ],
+    [
+	"SetFileTime",
+	$temp_name,
+	"\0\0\0\0\0\0\0\0",
+	file_time $want,
+	file_time $want,
+    ]
+], 'utime KERNEL32 calls';
 ( undef, undef, undef, undef, undef, undef, undef, undef,
     $patim, $pmtim, $pctim ) = stat $temp_name;
 note spftime( "$temp_name after utime()", $patim, $pmtim, $pctim );

@@ -5,23 +5,122 @@ use 5.006002;
 use strict;
 use warnings;
 
+use base qw{ Exporter };
+
 use Carp;
+use Test::More 0.88;
 
 our $VERSION = '0.007_03';
 
-BEGIN {
+our %EXPORT_TAGS = (
+    const	=> [ qw{ IS_WINDOWS } ],
+    file_time	=> [ qw{
+	    get_atime get_mtime get_ctime
+	    get_sys_atime get_sys_mtime get_sys_ctime
+	} ],
+    time	=> [ qw{ file_time sys_time } ],
+    trace	=> [ qw{ check_trace set_up_trace } ],
+);
+our @EXPORT_OK = map { @{ $_ } } values %EXPORT_TAGS;
+$EXPORT_TAGS{all} = \@EXPORT_OK;
 
-    my %is_windows = map { $_ => 1 } qw{ cygwin MSWin32 };
+use constant IS_WINDOWS => +{
+    map { $_ => 1 } qw{ cygwin MSWin32 } }->{$^O};
 
-    sub is_windows { return $is_windows{$^O}; }
+unless ( IS_WINDOWS ) {
 
-    unless ( is_windows() ) {
+    require lib;
+    lib->import( 'inc/mock' );
 
-	require lib;
-	lib->import( 'inc/mock' );
+}
 
+sub get_atime ($) {
+    $_[1] = 8;
+    goto &_get_file_time;
+}
+
+sub get_mtime ($) {
+    $_[1] = 9;
+    goto &_get_file_time;
+}
+
+sub get_ctime ($) {
+    $_[1] = 10;
+    goto &_get_file_time;
+}
+
+sub get_sys_atime ($) {
+    my ( $fn ) = @_;
+    return _ft_2_st( get_atime( $fn ) );
+}
+
+sub get_sys_mtime ($) {
+    my ( $fn ) = @_;
+    return _ft_2_st( get_mtime( $fn ) );
+}
+
+sub get_sys_ctime ($) {
+    my ( $fn ) = @_;
+    return _ft_2_st( get_ctime( $fn ) );
+}
+
+sub file_time ($) {
+    my ( $pt ) = @_;
+    return pack 'LL', 0, $pt;
+}
+
+sub sys_time ($) {
+    my ( $pt ) = @_;
+    my @tm = localtime $pt;
+    return pack 'ssssssss', $tm[5] + 1900, $tm[4] + 1, 0,
+	@tm[3, 2, 1, 0], 0;
+}
+
+# This largely duplicates GetFileTime in the mock Win32::API.
+sub _ft_2_st {
+    my ( $ft ) = @_;
+    IS_WINDOWS
+	and return;
+    my ( undef, $pt ) = unpack 'LL', $ft;
+    my @local = localtime $pt;
+    @local = reverse @local[0..5];
+    $local[0] += 1900;
+    $local[1] += 1;
+    splice @local, 2, 0, 0;
+    push @local, 0;
+    return pack 'ssssssss', @local;
+}
+
+sub _get_file_time {
+    my ( $fn, $inx ) = @_;
+    IS_WINDOWS
+	and return;
+    my @stat = stat $fn
+	or croak "Can not stat $fn: $!";
+    return pack 'LL', 0, $stat[$inx];
+}
+
+sub check_trace ($$) {
+    my ( $want, $name ) = @_;
+    my $code = Win32::API->can( '__mock_get_trace' )
+	or return;
+    my $got = $code->();
+    if ( 'ARRAY' eq ref $want && @{ $want } ) {
+	@_ = ( $got, $want, $name );
+	goto &is_deeply;
+    } else {
+	require Data::Dumper;
+	local $Data::Dumper::Useqq = 1;
+	note "$name: ", Data::Dumper::Dumper( $got );
     }
+    return;
+}
 
+sub set_up_trace () {
+    my $code = Win32::API->can( '__mock_clear_trace' )
+	or return;
+    $code->();
+    return;
 }
 
 1;
