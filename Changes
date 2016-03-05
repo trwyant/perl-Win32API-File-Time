@@ -1,3 +1,8 @@
+0.007_05	2016-03-05	T. R. Wyant
+  Replace 'use vars' with 'our' everywhere.
+
+  White space edit.
+
 0.007_04	2016-02-19	T. R. Wyant
   Try to sanity-check KERNEL32 calls in non-Windows testing
 
@@ -22,12 +27,6 @@
   Add machinery to test under non-Windows systems
 
 0.007		2016-01-26	T. R. Wyant
-  No changes since 0.006_02.
-
-0.006_02	2016-01-19	T. R. Wyant
-  Add ProhibitUnusedVarsStricter to xt/author/perlcriticrc
-
-0.006_01	2016-01-18	T. R. Wyant
   Use 'our' for $VERSION, exporter symbols
 
   Have {Makefile,Build}.PL die unless MSWin32 or cygwin. There is a
