@@ -10,7 +10,7 @@ use base qw{ Exporter };
 use Carp;
 use Test::More 0.88;
 
-our $VERSION = '0.007_05';
+our $VERSION = '0.007_06';
 
 our %EXPORT_TAGS = (
     const	=> [ qw{ IS_WINDOWS } ],
