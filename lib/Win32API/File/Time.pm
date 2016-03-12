@@ -92,7 +92,9 @@ has been exposed for orthogonality's sake.
 =cut
 
 sub GetFileTime {
-    my $fn = shift or croak "usage: GetFileTime (filename)";
+    my ( $fn ) = @_;
+    defined $fn
+	or croak "usage: GetFileTime (filename)";
     my $fh = _get_handle( $fn ) or return;
     $GetFileTime ||= _map( 'KERNEL32', 'GetFileTime', [ qw{ N P P P } ], 'I' );
     my $atime = my $mtime = my $ctime = pack 'LL', 0, 0; # Preallocate 64 bits.
@@ -170,9 +172,9 @@ sub utime {	## no critic (ProhibitBuiltinHomonyms)
 #	around the call.
 
 sub _close_handle {
-    my $fh = shift;
-    my $err = Win32::GetLastError ();
-    CloseHandle ($fh);
+    my ( $fh ) = @_;
+    my $err = Win32::GetLastError();
+    CloseHandle( $fh );
     $^E = $err;	## no critic (RequireLocalizedPunctuationVars)
     return;
 }
@@ -229,8 +231,7 @@ sub _filetime_to_perltime {
 #	configured appropriately for reading attributes.
 
 sub _get_handle {
-    my $fn = shift;
-    my $write = shift;
+    my ( $fn, $write ) = @_;
 
     my $handle = ${^WIDE_SYSTEM_CALLS} ?
 	CreateFileW( $fn,
