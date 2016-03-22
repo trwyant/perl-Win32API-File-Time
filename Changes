@@ -1,3 +1,6 @@
+0.007_07	2016-03-22	T. R. Wyant
+  Complete conversion from 'shift' to '... = @_'
+
 0.007_06	2016-03-12	T. R. Wyant
   Convert most code from 'shift' to '... = @_'
 

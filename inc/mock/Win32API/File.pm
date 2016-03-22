@@ -8,7 +8,7 @@ use warnings;
 use Carp;
 use Exporter qw{ import };
 
-our $VERSION = '0.007_06';
+our $VERSION = '0.007_07';
 
 our %EXPORT_TAGS = (
     FILE_		=> [ qw{
