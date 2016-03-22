@@ -122,11 +122,12 @@ is equivalent to the "touch" command for the given file.
 =cut
 
 sub SetFileTime {
-    my $fn = shift
+    my ( $fn, $atime, $mtime, $ctime ) = @_;
+    defined $fn
 	or croak "usage: SetFileTime (filename, atime, mtime, ctime)";
-    my $atime = _perltime_to_filetime( shift );
-    my $mtime = _perltime_to_filetime( shift );
-    my $ctime = _perltime_to_filetime( shift );
+    foreach ( $atime, $mtime, $ctime ) {
+	$_ = _perltime_to_filetime( $_ );
+    }
     # We assume we can do something useful for an undef.
     $SetFileTime ||= _map( 'KERNEL32', 'SetFileTime', [ qw{ N P P P } ], 'I' );
     my $fh = _get_handle( $fn, 1 )
