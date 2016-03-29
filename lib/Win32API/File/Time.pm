@@ -234,23 +234,22 @@ sub _filetime_to_perltime {
 sub _get_handle {
     my ( $fn, $write ) = @_;
 
+    my @arg = (
+	    FILE_READ_ATTRIBUTES,
+	    FILE_SHARE_READ,
+	    [],
+	    OPEN_EXISTING,
+	    FILE_FLAG_BACKUP_SEMANTICS,
+	    0
+    );
+    if ( $write ) {
+	$arg[0] = FILE_WRITE_ATTRIBUTES;
+	$arg[1] |= FILE_SHARE_WRITE;
+	$arg[4] |= FILE_ATTRIBUTE_NORMAL;
+    }
     my $handle = ${^WIDE_SYSTEM_CALLS} ?
-	CreateFileW( $fn,
-	    ( $write ? FILE_WRITE_ATTRIBUTES : FILE_READ_ATTRIBUTES ),
-	    ( $write ? FILE_SHARE_WRITE | FILE_SHARE_READ : FILE_SHARE_READ ),
-	    [],
-	    OPEN_EXISTING,
-	    ( $write ? FILE_ATTRIBUTE_NORMAL | FILE_FLAG_BACKUP_SEMANTICS : FILE_FLAG_BACKUP_SEMANTICS ),
-	    0,
-	) :
-	CreateFile( $fn,
-	    ( $write ? FILE_WRITE_ATTRIBUTES : FILE_READ_ATTRIBUTES ),
-	    ( $write ? FILE_SHARE_WRITE | FILE_SHARE_READ : FILE_SHARE_READ ),
-	    [],
-	    OPEN_EXISTING,
-	    ( $write ? FILE_ATTRIBUTE_NORMAL | FILE_FLAG_BACKUP_SEMANTICS : FILE_FLAG_BACKUP_SEMANTICS ),
-	    0,
-	)
+	CreateFileW( $fn, @arg ) :
+	CreateFile( $fn, @arg )
 	or do {
 	$^E = Win32::GetLastError();	## no critic (RequireLocalizedPunctuationVars)
 	return;
