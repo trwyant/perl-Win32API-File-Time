@@ -40,8 +40,11 @@ use constant FILE_SHARE_WRITE		=> 2;
 
 use constant OPEN_EXISTING		=> 3;
 
+*__mock_add_to_trace = Win32::API->can( '__mock_add_to_trace' ) || sub {};
+
 sub CloseHandle {
     my ( $fh ) = @_;
+    __mock_add_to_trace( CloseHandle => @_ );
     defined $fh
 	or croak 'Missing file handle';
     return;
@@ -49,6 +52,7 @@ sub CloseHandle {
 
 sub CreateFile {
     my ( $fn, $rw, $share, $sec, $create, $flag, $tplt ) = @_;
+    __mock_add_to_trace( CreateFile => @_ );
     'ARRAY' eq ref $sec
 	and not @{ $sec }
 	or croak "Unexpected security attributes $sec";

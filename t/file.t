@@ -29,11 +29,25 @@ set_up_trace;
 my ( $atime, $mtime, $ctime ) = GetFileTime( $me );
 check_trace [
     [
+	"CreateFile",
+	"t/file.t",
+	128,
+	1,
+	[],
+	3,
+	33554432,
+	0
+    ],
+    [
 	"GetFileTime",
 	"t/file.t",
 	"\0\0\0\0\0\0\0\0",
 	"\0\0\0\0\0\0\0\0",
 	"\0\0\0\0\0\0\0\0"
+    ],
+    [
+	"CloseHandle",
+	"t/file.t"
     ],
     [
 	"FileTimeToLocalFileTime",
@@ -122,11 +136,25 @@ check_trace [
 	"\0\0\0\0\0\0\0\0"
     ],
     [
+	"CreateFile",
+	$temp_name,
+	256,
+	3,
+	[],
+	3,
+	33554560,
+	0
+    ],
+    [
 	"SetFileTime",
 	$temp_name,
 	"\0\0\0\0\0\0\0\0",
 	file_time $want,
 	file_time $want,
+    ],
+    [
+	"CloseHandle",
+	$temp_name,
     ]
 ], 'SetFileTime KERNEL32 calls';
 ( undef, undef, undef, undef, undef, undef, undef, undef,
@@ -164,11 +192,25 @@ check_trace [
 	"\0\0\0\0\0\0\0\0"
     ],
     [
+	"CreateFile",
+	$temp_name,
+	256,
+	3,
+	[],
+	3,
+	33554560,
+	0
+    ],
+    [
 	"SetFileTime",
 	$temp_name,
 	"\0\0\0\0\0\0\0\0",
 	file_time $want,
 	file_time $want,
+    ],
+    [
+	"CloseHandle",
+	$temp_name,
     ]
 ], 'utime KERNEL32 calls';
 ( undef, undef, undef, undef, undef, undef, undef, undef,
