@@ -1,3 +1,6 @@
+0.007_08	2016-03-29	T. R. Wyant
+  Simplify code to get file handle.
+
 0.007_07	2016-03-22	T. R. Wyant
   Complete conversion from 'shift' to '... = @_'
 
