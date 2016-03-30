@@ -44,6 +44,11 @@ severity	= stern
 
 [Perl::Critic::Policy::Subroutines::ProhibitUnusedPrivateSubroutines]
 
+severity	= stern
+private_name_regex	= _(?!_)\w+
+
+[Perl::Critic::Policy::Subroutines::ProhibitUnusedPrivateSubroutines]
+
 private_name_regex = _(?!_)\w+
 
 [Perl::Critic::Policy::Subroutines::RequireArgUnpacking]
