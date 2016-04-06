@@ -1,39 +1,9 @@
-0.007_08	2016-03-29	T. R. Wyant
-  Simplify code to get file handle.
+0.008		2016-04-05	T. R. Wyant
+  Code and documentation clean-up.
 
-0.007_07	2016-03-22	T. R. Wyant
-  Complete conversion from 'shift' to '... = @_'
+  Convert to Test::More.
 
-0.007_06	2016-03-12	T. R. Wyant
-  Convert most code from 'shift' to '... = @_'
-
-0.007_05	2016-03-05	T. R. Wyant
-  Replace 'use vars' with 'our' everywhere.
-
-  White space edit.
-
-0.007_04	2016-02-19	T. R. Wyant
-  Try to sanity-check KERNEL32 calls in non-Windows testing
-
-0.007_03	2016-02-11	T. R. Wyant
-  Add Makefile targets authortest, testcover.
-
-  Revert "Code and documentation cleanup"
-
-0.007_02	2016-02-10	T. R. Wyant
-  Code and documentation cleanup.
-    This is mostly white space and documentation, but I also switched
-    completely over to unpacking arguments by array assignment rather
-    than shift(), and ended up completely reworking the logic around
-    ${^WIDE_SYSTEM_CALLS}, which it turns out was silently (or almost
-    so) retracted in Perl 5.8.1.
-
-0.007_01	2016-02-02	T. R. Wyant
-  Correct xt/author/pod_coverage.t
-
-  Convert to Test::More; split out t/file.t.
-
-  Add machinery to test under non-Windows systems
+  Add machinery to test (though not use) on non-Windows systems.
 
 0.007		2016-01-26	T. R. Wyant
   Use 'our' for $VERSION, exporter symbols
@@ -67,21 +37,27 @@
   Assert FILE_FLAG_BACKUP_SEMANTICS when reading times, so that it works
     for directories under XP and 2003 server. Thanks to Leigh Power for
     pointing out the problem and suggesting the solution.
-  Document FAT, and accomodate it in self-test.  Thanks again, Leigh.
+
+  Document FAT, and accomodate it in self-test. Thanks again, Leigh.
+
   Centralize code to close handles on error.
 
 0.004		2005-01-13	T. R. Wyant
   Close handles after use. Thanks to Chris Camejo for pointing out the
     leak.
+
   Fix export tags to agree with docs.
+
   Tweak "BUGS" documentation.
 
 0.003		2004-12-17	T. R. Wyant
   Correct time conversion.
+
   Modify test to not change own date.
 
 0.002		2004-10-02	T. R. Wyant
   Correct MANIFEST and Makefile.PL dependencies.
+
   Tweak documentation. No code changes.
 
 0.001		2004-05-13	T. R. Wyant

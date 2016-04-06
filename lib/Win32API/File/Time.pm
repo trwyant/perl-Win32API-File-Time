@@ -71,7 +71,7 @@ use Time::Local;
 use Win32::API;
 use Win32API::File qw{ :ALL };
 
-our $VERSION = '0.007_08';
+our $VERSION = '0.008';
 
 our @EXPORT_OK = qw{ GetFileTime SetFileTime utime };
 our %EXPORT_TAGS = (
