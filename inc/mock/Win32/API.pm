@@ -91,7 +91,7 @@ foreach my $dll ( keys %mock ) {
 
 sub new {
     my ( $class, $lib, $sub, $arg, $ret ) = @_;
-    my $mock = join '__', '_mock', $lib, $sub;
+#   my $mock = join '__', '_mock', $lib, $sub;
     $mock{$lib}
 	or croak "No mock code available for $lib.dll";
     my $info = $mock{$lib}{$sub}
@@ -136,7 +136,7 @@ sub Call {
 }
 
 {
-    my $size_quad = _size( pack 'LL', 0, 0 );
+#   my $size_quad = _size( pack 'LL', 0, 0 );
 
     my %valid = (
 	N	=> sub {
