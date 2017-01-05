@@ -5,7 +5,8 @@ use 5.006002;
 use strict;
 use warnings;
 
-use base qw{ Exporter };
+use Exporter ();
+our @ISA = qw{ Exporter };
 
 use Carp;
 use Test::More 0.88;

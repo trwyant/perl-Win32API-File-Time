@@ -57,7 +57,7 @@ use 5.006002;
 use strict;
 use warnings;
 
-use base qw{Exporter};
+use parent qw{ Exporter };
 
 our $FileTimeToSystemTime;
 our $FileTimeToLocalFileTime;

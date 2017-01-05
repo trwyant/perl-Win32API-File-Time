@@ -64,6 +64,7 @@ sub requires {
 ##  if ( ! $self->distribution() ) {
 ##  }
     return {
+	'parent'		=> 0,
         'strict'		=> 0,
         'vars'			=> 0,
         'warnings'		=> 0,
