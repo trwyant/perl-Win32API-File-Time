@@ -349,7 +349,7 @@ Thomas R. Wyant, III (F<Thomas.R.Wyant-III@usa.dupont.com>)
 Copyright (C) 2004-2005 by E. I. DuPont de Nemours and Company, Inc. All
 rights reserved.
 
-Copyright (C) 2007, 2010, 2016-2017 by Thomas R. Wyant, III
+Copyright (C) 2007, 2010, 2016-2017, 2019 by Thomas R. Wyant, III
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl 5.10.0. For more details, see the full text
