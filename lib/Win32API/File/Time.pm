@@ -315,8 +315,8 @@ change even after C<GetFileTime()> has been used. In fact, it looks to
 me very much like C<stat()> reports the modification time in element [8]
 of the list, but I find this nowhere documented.
 
-FAT file time resolution is 2 seconds at best, as documented
-at L<http://support.microsoft.com/default.aspx?scid=kb;en-us;127830>.
+FAT file time resolution is 2 seconds at best, as documented at
+L<https://docs.microsoft.com/en-us/windows/desktop/SysInfo/file-times>.
 Access time resolution seems to be to the nearest day.
 
 =head1 ACKNOWLEDGMENTS
