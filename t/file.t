@@ -16,7 +16,8 @@ use Win32API::File::Time qw{ :all };	# Must be loaded after My::Module::Test
 use constant REACT_OS	=> 'MSWin32' eq $^O && (
     $ENV{OS} =~m/ reactos /smxi ||
     defined $ENV{SystemRoot} && $ENV{SystemRoot} =~ m/ reactos /smxi ||
-    defined $ENV{windir} && $ENV{windir} =~ m/ reactos /smxi
+    defined $ENV{windir} && $ENV{windir} =~ m/ reactos /smxi ||
+    defined $ENV{SystemDrive} && -e "$ENV{SystemDrive}/ReactOS"
 );
 
 my $me = $0;

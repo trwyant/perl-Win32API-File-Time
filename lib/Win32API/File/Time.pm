@@ -305,6 +305,55 @@ __END__
 
 =back
 
+=head1 NOTE
+
+It has been a while since I had access to a Microsoft Windows system of
+any sort, and various strange expedients have been used to allow me to
+continue to support this module. Requests for co-maintainership, or
+ownership of the module, are welcome.
+
+By OS, the situation is:
+
+=head2 ReactOS
+
+ReactOS is an alpha-quality open-source clean-room OS implementing the
+Microsoft Windows API. When it started out it was targeting NT 4.0.
+Lately they seem to be targeting Windows 2003. ReactOS is found at
+L<https://reactos.org/>.
+
+With about 0.4.11 this has become good enough that using it to support
+this module is not completely out of the question. However, the last I
+checked I was unable to read the creation time. Since this worked under
+Microsoft Windows the last time I had access to that OS, I presume this
+failure is a ReactOS thing.
+
+The problem here is that I know of no definitive way to distinguish
+between ReactOS and Microsoft Windows. Early versions of ReactOS defined
+the C<OS> environment variable as C<'ReactOS'>, but more recent ones
+call it C<'Windows_NT'>. At the moment there is ad-hocery in
+F<t/file.t> that detects ReactOS by feeling around the system drive
+looking for files with that name. The default installation makes
+C<%SystemRoot%> C<'C:\ReactOS'>, and this is what we look for. If you
+change this, you will need to create file F<C:\ReactOS> yourself or the
+creation time check will be run, and it will fail.
+
+=head2 Cygwin
+
+I am unable to install this on ReactOS. Support is on a best-effort
+basis, and the requester may have to be more-than-usually involved in
+developing any change.
+
+=head2 Microsoft Windows
+
+I do not have access to such a system. If ReactOS proves inadequate for
+a particular purpose, support will be on the same basis as
+L<Cygwin|/Cygwin>.
+
+=head2 Anything else
+
+Regression testing is done using a mock L<Win32::API|Win32::API>.
+Anything outside this needs either ReactOS or another pair of hands.
+
 =head1 BUGS
 
 As implemented, C<GetFileTime()> constitutes an access, and therefore
