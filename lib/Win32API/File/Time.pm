@@ -365,7 +365,7 @@ me very much like C<stat()> reports the modification time in element [8]
 of the list, but I find this nowhere documented.
 
 FAT file time resolution is 2 seconds at best, as documented at
-L<https://docs.microsoft.com/en-us/windows/desktop/SysInfo/file-times>.
+L<https://docs.microsoft.com/en-us/windows/win32/sysinfo/file-times>.
 Access time resolution seems to be to the nearest day.
 
 =head1 ACKNOWLEDGMENTS
