@@ -1,4 +1,4 @@
-0.008_01	2019-10-20	T. R. Wyant
+0.009		2019-10-31	T. R. Wyant
     Correct t/file.t failure report, ReactOS detection
 
     Fix broken POD links, and add tests to ensure they stay fixed.
