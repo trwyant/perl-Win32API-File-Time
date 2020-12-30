@@ -240,7 +240,8 @@ L<Win32::API|Win32::API> (the real one).
 =head1 SUPPORT
 
 Support is by the author. Please file bug reports at
-L<https://rt.cpan.org>, or in electronic mail to the author.
+L<https://github.com/trwyant/perl-Win32API-File-Time/issues>, or in
+electronic mail to the author.
 
 =head1 AUTHOR
 
