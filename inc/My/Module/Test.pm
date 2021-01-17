@@ -11,7 +11,7 @@ our @ISA = qw{ Exporter };
 use Carp;
 use Test::More 0.88;
 
-our $VERSION = '0.009_01';
+our $VERSION = '0.010';
 
 our %EXPORT_TAGS = (
     const	=> [ qw{ IS_WINDOWS } ],
