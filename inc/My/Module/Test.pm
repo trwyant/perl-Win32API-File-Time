@@ -161,6 +161,7 @@ This class has the following attributes:
 =head1 SUPPORT
 
 Support is by the author. Please file bug reports at
+L<https://rt.cpan.org/Public/Dist/Display.html?Name=Win32API-File-Time>,
 L<https://github.com/trwyant/perl-Win32API-File-Time/issues>, or in
 electronic mail to the author.
 

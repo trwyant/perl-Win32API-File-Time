@@ -38,7 +38,8 @@ sub meta_merge {
 	},
 	resources	=> {
 	    bugtracker	=> {
-                web	=> 'https://github.com/trwyant/perl-Win32API-File-Time/issues',
+		web	=> 'https://rt.cpan.org/Public/Dist/Display.html?Name=Win32API-File-Time',
+		# web	=> 'https://github.com/trwyant/perl-Win32API-File-Time/issues',
                 mailto  => 'wyant@cpan.org',
             },
 	    license	=> 'http://dev.perl.org/licenses/',
@@ -185,6 +186,7 @@ information makes it into F<META.yml>.
 =head1 SUPPORT
 
 Support is by the author. Please file bug reports at
+L<https://rt.cpan.org/Public/Dist/Display.html?Name=Win32API-File-Time>,
 L<https://github.com/trwyant/perl-Win32API-File-Time/issues>, or in
 electronic mail to the author.
 
