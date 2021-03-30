@@ -8,7 +8,7 @@ use warnings;
 use Carp;
 use Time::Local ();
 
-our $VERSION = '0.010';
+our $VERSION = '0.010_01';
 
 my %mock = (
     KERNEL32	=> {
