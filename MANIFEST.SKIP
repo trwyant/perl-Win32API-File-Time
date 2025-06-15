@@ -2,7 +2,9 @@
 ^Build$
 ^cover_db/
 CVS/
-^.git
+^.git/
+^.github/
+^.gitignore$
 ^foo
 ^Makefile$
 ^MANIFEST\.
