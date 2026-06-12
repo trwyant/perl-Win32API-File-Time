@@ -362,9 +362,10 @@ FAT file time resolution is 2 seconds at best, as documented at
 L<https://learn.microsoft.com/en-us/windows/win32/sysinfo/file-times>.
 Access time resolution seems to be to the nearest day.
 
+=head1 SUPPORT
+
 Support is by the author. Please file bug reports at
-L<https://rt.cpan.org/Public/Dist/Display.html?Name=Win32API-File-Time>,
-L<https://github.com/trwyant/perl-Win32API-File-Time/issues>, or in
+L<https://github.com/trwyant/perl-Win32API-File-Time/issues> or in
 electronic mail to the author.
 
 =head1 ACKNOWLEDGMENTS
